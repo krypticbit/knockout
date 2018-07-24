@@ -50,6 +50,7 @@ minetest.register_entity("knockout:entity", {
     end,
     on_rightclick = function(e, clicker)
 		local cName = clicker:get_player_name()
+		if cName == e.grabbed_name then return end
 		for carryer, carried in pairs(knockout.carrying) do
 			if carryer == cName or carried == e.grabbed_name then return end
 		end
