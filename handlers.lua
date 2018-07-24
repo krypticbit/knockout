@@ -18,7 +18,9 @@ minetest.register_globalstep(function(dtime)
 	if gs_time >= 1 then
 		gs_time = 0
 		for name, _ in pairs(knockout.knocked_out) do
-			knockout.decrease_knockout_time(name, 1)
+			if minetest.get_player_by_name(name) ~= nil then
+				knockout.decrease_knockout_time(name, 1)
+			end
 		end
 	end
 	-- Check for player drop
@@ -60,6 +62,8 @@ end)
 
 -- Catch whacks with various tools and calculate if the victim should be knocked out
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
+	local victim = player:get_player_name()
+	if knockout.knocked_out[victim] ~= nil then return end
 	local tool = hitter:get_wielded_item():get_name() -- Get tool used
 	local def = nil
 	-- Get tool knockout def
@@ -78,7 +82,7 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 		if math.random() < def.chance * chanceMult then
 			-- Knocked out
 			local koTime = ((currHp / def.max_health) + 1) * def.max_time / 2
-			knockout.knockout(player:get_player_name(), koTime)
+			knockout.knockout(victim, koTime)
 		end
 	end
 end)

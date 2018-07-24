@@ -99,6 +99,13 @@ knockout.knockout = function(pName, duration)
 	-- Make player lay down
 	default.player_attached[pName] = true
 	default.player_set_animation(p, "lay")
+	-- No interacting for you, player
+	local privs = minetest.get_player_privs(pName)
+	privs.shout = nil
+	privs.interact = nil
+	minetest.set_player_privs(pName, privs)
+	-- Save
+	knockout.save()
 end
 
 -- Wake up player
@@ -123,6 +130,13 @@ knockout.wake_up = function(pName)
 			break
 		end
 	end
+	-- Give the whiny player their privs back already
+	local privs = minetest.get_player_privs(pName)
+	privs.shout = true
+	privs.interact = true
+	minetest.set_player_privs(pName, privs)
+	-- Save
+	knockout.save()
 end
 
 -- Decrease knockout time
