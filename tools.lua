@@ -30,6 +30,9 @@ knockout.register_tool("knockout:bat", 0.8, 8, 120)
 --DEFAULT--
 -----------
 
+-- Fist
+knockout.register_tool("", 0.6, 6, 80)
+
 -- picks have no knockout chance
 -- shovels have slight knockout chance with low knockout time
 knockout.register_tool("default:shovel_wood", 0.1, 10, 20)

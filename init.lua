@@ -153,7 +153,9 @@ knockout.wake_up = function(pName)
 	privs.interact = true
 	minetest.set_player_privs(pName, privs)
 	-- Hide formspec
-	minetest.close_formspec(pName, "knockout:fs")
+	if p:get_hp() > 0 then
+		minetest.close_formspec(pName, "knockout:fs")
+	end
 	-- Save
 	knockout.save()
 end

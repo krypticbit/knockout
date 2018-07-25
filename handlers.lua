@@ -11,9 +11,12 @@ minetest.register_globalstep(function(dtime)
 	if gs_time >= 1 then
 		gs_time = 0
 		for name, _ in pairs(knockout.knocked_out) do
-			if minetest.get_player_by_name(name) ~= nil then
-				knockout.decrease_knockout_time(name, 1)
-				minetest.show_formspec(name, "knockout:fs", getFs(name))
+			local p = minetest.get_player_by_name(name)
+			if p ~= nil then
+				if p:get_hp() > 0 then
+					knockout.decrease_knockout_time(name, 1)
+					minetest.show_formspec(name, "knockout:fs", getFs(name))
+				end
 			end
 		end
 		knockout.save()
@@ -29,6 +32,7 @@ end)
 
 -- Oh no you don't. I like that formspec open
 minetest.register_on_player_receive_fields(function(player, fName, _)
+	if player:get_hp() <= 0 then return false end
 	if fName == "knockout:fs" then
 		local name = player:get_player_name()
 		minetest.show_formspec(name, fName, getFs(name))
