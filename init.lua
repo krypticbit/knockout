@@ -1,6 +1,8 @@
 local path = minetest.get_modpath(minetest.get_current_modname())
 dofile(path .. "/overrides.lua")
 
+
+
 -- Create globals
 knockout = {}
 knockout.knocked_out = {}
@@ -135,6 +137,8 @@ knockout.wake_up = function(pName)
 	privs.shout = true
 	privs.interact = true
 	minetest.set_player_privs(pName, privs)
+	-- Hide formspec
+	minetest.close_formspec(pName, "knockout:fs")
 	-- Save
 	knockout.save()
 end

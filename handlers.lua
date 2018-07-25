@@ -10,6 +10,11 @@ local function carrierQuit(pName)
 	end
 end
 
+-- Create formspec structure
+local function getFs(name)
+	return "size[5,3]label[1.4,1;You are unconscious!]label[0.8,2;Time remaining: " .. tostring(knockout.knocked_out[name]) .. " seconds]"
+end
+
 -- Globalstep to revive players
 local gs_time = 0
 minetest.register_globalstep(function(dtime)
@@ -20,8 +25,10 @@ minetest.register_globalstep(function(dtime)
 		for name, _ in pairs(knockout.knocked_out) do
 			if minetest.get_player_by_name(name) ~= nil then
 				knockout.decrease_knockout_time(name, 1)
+				minetest.show_formspec(name, "knockout:fs", getFs(name))
 			end
 		end
+		knockout.save()
 	end
 	-- Check for player drop
 	for name, _ in pairs(knockout.carrying) do
@@ -29,6 +36,15 @@ minetest.register_globalstep(function(dtime)
 		if p:get_player_control().jump then
 			carrierQuit(name)
 		end
+	end
+end)
+
+-- Oh no you don't. I like that formspec open
+minetest.register_on_player_receive_fields(function(player, fName, _)
+	if fName == "knockout:fs" then
+		local name = player:get_player_name()
+		minetest.show_formspec(name, fName, getFs(name))
+		return true
 	end
 end)
 
