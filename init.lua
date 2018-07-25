@@ -90,7 +90,7 @@ knockout.carrier_drop = function(pName) -- pname = name of carrier
 		if carried then
 			carried:set_detach()
 		end
-		--knockout.knockout(cName)
+		knockout.knockout(cName)
 		knockout.carrying[pName] = nil
 	end
 end
@@ -98,6 +98,7 @@ end
 -- Knock out player
 knockout.knockout = function(pName, duration)
 	local p = minetest.get_player_by_name(pName)
+	if not p then return end
 	if duration == nil then
 		if knockout.knocked_out[pName] == nil then return end
 	else
