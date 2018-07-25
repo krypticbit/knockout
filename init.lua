@@ -89,8 +89,8 @@ knockout.carrier_drop = function(pName) -- pname = name of carrier
 		local carried = minetest.get_player_by_name(cName)
 		if carried then
 			carried:set_detach()
+			knockout.knockout(cName)
 		end
-		knockout.knockout(cName)
 		knockout.carrying[pName] = nil
 	end
 end
