@@ -84,6 +84,19 @@ knockout.save = function()
 	knockout.storage:set_string("knocked_out", minetest.serialize(knockout.knocked_out))
 end
 
+-- Drop a player
+knockout.carrier_drop = function(pName) -- pname = name of carrier
+	if knockout.carrying[pName] then
+		local cName = knockout.carrying[pName]
+		local carried = minetest.get_player_by_name(cName)
+		if carried then
+			carried:set_detach()
+		end
+		knockout.knockout(cName)
+		knockout.carrying[pName] = nil
+	end
+end
+
 -- Knock out player
 knockout.knockout = function(pName, duration)
 	local p = minetest.get_player_by_name(pName)
@@ -94,6 +107,8 @@ knockout.knockout = function(pName, duration)
 	end
 	-- Incase player is riding a horse or something
 	p:set_detach()
+	-- If the player is carrying another player, fix that
+	knockout.carrier_drop(pName)
 	-- Freeze player using entites
 	local pos = p:get_pos()
 	local e = minetest.add_entity(pos, "knockout:entity", pName)

@@ -1,15 +1,3 @@
-local function carrierQuit(pName)
-	if knockout.carrying[pName] then
-		local cName = knockout.carrying[pName]
-		local carried = minetest.get_player_by_name(cName)
-		if carried then
-			carried:set_detach()
-		end
-		knockout.knockout(cName)
-		knockout.carrying[pName] = nil
-	end
-end
-
 -- Create formspec structure
 local function getFs(name)
 	return "size[5,3]label[1.4,1;You are unconscious!]label[0.8,2;Time remaining: " .. tostring(knockout.knocked_out[name]) .. " seconds]"
@@ -34,7 +22,7 @@ minetest.register_globalstep(function(dtime)
 	for name, _ in pairs(knockout.carrying) do
 		local p = minetest.get_player_by_name(name)
 		if p:get_player_control().jump then
-			carrierQuit(name)
+			knockout.carrier_drop(name)
 		end
 	end
 end)
@@ -53,12 +41,12 @@ minetest.register_on_dieplayer(function(p)
 	local pName = p:get_player_name()
 	knockout.wake_up(pName)
 	-- If the player is carrying another player, drop them
-	carrierQuit(pName)
+	knockout.carrier_drop(pName)
 end)
 
 -- If the player was carrying another player, drop them
 minetest.register_on_leaveplayer(function(p, _)
-	carrierQuit(p:get_player_name())
+	knockout.carrier_drop(p:get_player_name())
 end)
 
 -- Catch those pesky players that try to leave/join to get un-knocked out
