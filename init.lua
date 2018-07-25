@@ -1,8 +1,6 @@
 local path = minetest.get_modpath(minetest.get_current_modname())
 dofile(path .. "/overrides.lua")
 
-
-
 -- Create globals
 knockout = {}
 knockout.knocked_out = {}

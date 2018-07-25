@@ -71,14 +71,7 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 	if knockout.knocked_out[victim] ~= nil then return end
 	if currHp <= 0 then return end
 	local tool = hitter:get_wielded_item():get_name() -- Get tool used
-	local def = nil
-	-- Get tool knockout def
-	for name, tdef in pairs(knockout.tools) do
-		if name == tool then
-			def = tdef
-			break
-		end
-	end
+	local def = knockout.tools[tool]
 	if def == nil then return end
 	-- Calculate
 	if currHp <= def.max_health then
