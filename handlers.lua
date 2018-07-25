@@ -56,7 +56,7 @@ end)
 -- Catch those pesky players that try to leave/join to get un-knocked out
 minetest.register_on_joinplayer(function(p)
 	local koed = false
-	local pname = p:get_player_name()
+	local name = p:get_player_name()
 	if knockout.knocked_out[name] ~= nil then
 		knockout.knockout(pname)
 	end
