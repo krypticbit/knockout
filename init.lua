@@ -10,7 +10,19 @@ knockout.tools = {}
 -- Create mod storage
 knockout.storage = minetest.get_mod_storage()
 
--- Register "nothing" entity
+-- Register entities
+minetest.register_entity("knockout:carrying", {
+	hp_max = 1000,
+	physical = true,
+	weight = 5,
+	collisionbox = {-0.35, 0, -0.35, 0.35, 1.8, 0.35},
+	visual = "cube",
+	textures = {"doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png"},
+	is_visible = true,
+	makes_footstep_sound = false,
+    automatic_rotate = false,
+})
+   
 minetest.register_entity("knockout:entity", {
 	hp_max = 1000,
 	physical = true,
@@ -56,10 +68,8 @@ minetest.register_entity("knockout:entity", {
 		end
 		victim = minetest.get_player_by_name(e.grabbed_name)
 		if victim then
-			victim:set_detach()
-			victim:set_attach(clicker, "", {x = 0, y = 0, z = -15}, {x = 0, y = 0, z = 0})
+			e.object:set_attach(clicker, "", {x = 0, y = 0, z = -15}, {x = 0, y = 0, z = 0})
 			knockout.carrying[cName] = e.grabbed_name
-			e.object:remove()
 		end
     end,
     on_step = function(e, dtime)
@@ -88,7 +98,8 @@ knockout.carrier_drop = function(pName) -- pname = name of carrier
 		local cName = knockout.carrying[pName]
 		local carried = minetest.get_player_by_name(cName)
 		if carried then
-			carried:set_detach()
+			local e = carried:get_attach()
+			e:remove()
 			knockout.knockout(cName)
 		end
 		knockout.carrying[pName] = nil
