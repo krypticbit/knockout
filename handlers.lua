@@ -79,7 +79,9 @@ end)
 -- Catch whacks with various tools and calculate if the victim should be knocked out
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
 	local victim = player:get_player_name()
+	local currHp = player:get_hp()
 	if knockout.knocked_out[victim] ~= nil then return end
+	if currHp <= 0 then return end
 	local tool = hitter:get_wielded_item():get_name() -- Get tool used
 	local def = nil
 	-- Get tool knockout def
@@ -91,13 +93,12 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 	end
 	if def == nil then return end
 	-- Calculate
-	local currHp = player:get_hp()
 	if currHp <= def.max_health then
 		local chanceMult = time_from_last_punch / tool_capabilities.full_punch_interval -- You can't knock people out with lots of love taps
 		if chanceMult > 1 then chanceMult = 1 end
 		if math.random() < def.chance * chanceMult then
 			-- Knocked out
-			local koTime = ((currHp / def.max_health) + 1) * def.max_time / 2
+			local koTime = math.floor(def.max_time * (1 - currHp / (def.max_health * 2)))
 			knockout.knockout(victim, koTime)
 		end
 	end
