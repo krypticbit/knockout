@@ -57,13 +57,7 @@ end)
 minetest.register_on_joinplayer(function(p)
 	local koed = false
 	local pname = p:get_player_name()
-	for name, _ in pairs(knockout.knocked_out) do
-		if name == pname then
-			koed = true
-			break
-		end
-	end
-	if koed then
+	if knockout.knocked_out[name] ~= nil then
 		knockout.knockout(pname)
 	end
 end)

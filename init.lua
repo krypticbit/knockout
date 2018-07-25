@@ -90,7 +90,7 @@ knockout.carrier_drop = function(pName) -- pname = name of carrier
 		if carried then
 			carried:set_detach()
 		end
-		knockout.knockout(cName)
+		--knockout.knockout(cName)
 		knockout.carrying[pName] = nil
 	end
 end
