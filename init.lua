@@ -115,13 +115,12 @@ knockout.knockout = function(pName, duration)
 	-- Make player lay down
 	default.player_attached[pName] = true
 	default.player_set_animation(p, "lay")
+	p:set_eye_offset({x=0, y=-13, z=-2}, {x=0, y=0, z=0})
 	-- No interacting for you, player
 	local privs = minetest.get_player_privs(pName)
 	privs.shout = nil
 	privs.interact = nil
 	minetest.set_player_privs(pName, privs)
-	-- Look at all the pretty clouds
-	p:set_look_vertical(-math.pi / 2)
 	-- Save
 	knockout.save()
 end
@@ -141,6 +140,7 @@ knockout.wake_up = function(pName)
 	-- Make player stand back up
 	default.player_attached[pName] = false
 	default.player_set_animation(p, "stand")
+	p:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
 	-- If the player was being carried, remove that
 	for name, carried in pairs(knockout.carrying) do
 		if carried == pName then

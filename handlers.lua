@@ -16,7 +16,6 @@ minetest.register_globalstep(function(dtime)
 				if p:get_hp() > 0 then
 					knockout.decrease_knockout_time(name, 1)
 					minetest.show_formspec(name, "knockout:fs", getFs(name))
-					p:set_look_vertical(-math.pi / 2)
 				end
 			end
 		end
