@@ -18,7 +18,7 @@ minetest.register_entity("knockout:entity", {
 	weight = 5,
 	collisionbox = {-0.35, 0, -0.35, 0.35, 1.8, 0.35},
 	visual = "cube",
-	textures = {"doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png"},
+	textures = {"invisible.png", "invisible.png", "invisible.png", "invisible.png", "invisible.png", "invisible.png"},
 	is_visible = true,
 	makes_footstep_sound = false,
     automatic_rotate = false,
