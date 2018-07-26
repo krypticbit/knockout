@@ -125,7 +125,7 @@ knockout.knockout = function(pName, duration)
 			text = "knockout_black.png",
 			name = "knockedout",
 			position = {x = 0.5, y = 0.5},
-			scale = {x= -100, y= -100},
+			scale = {x= -110, y= -110},
 			alignment = {x = 0, y = 0},
 		
 		})
