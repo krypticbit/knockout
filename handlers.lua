@@ -16,17 +16,21 @@ minetest.register_globalstep(function(dtime)
 				if p:get_hp() > 0 then
 					knockout.decrease_knockout_time(name, 1)
 					minetest.show_formspec(name, "knockout:fs", getFs(name))
+					p:set_look_vertical(-math.pi / 2)
 				end
 			end
 		end
 		knockout.save()
 	end
-	-- Check for player drop
-	for name, _ in pairs(knockout.carrying) do
+	for name, carried in pairs(knockout.carrying) do
+		-- Check for player drop
 		local p = minetest.get_player_by_name(name)
 		if p:get_player_control().jump then
 			knockout.carrier_drop(name)
 		end
+		-- Set the look direction to make it more realistic
+		local c = minetest.get_player_by_name(carried)
+		c:set_look_horizontal(p:get_look_horizontal())
 	end
 end)
 

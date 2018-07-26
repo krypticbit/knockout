@@ -10,18 +10,7 @@ knockout.tools = {}
 -- Create mod storage
 knockout.storage = minetest.get_mod_storage()
 
--- Register entities
-minetest.register_entity("knockout:carrying", {
-	hp_max = 1000,
-	physical = true,
-	weight = 5,
-	collisionbox = {-0.35, 0, -0.35, 0.35, 1.8, 0.35},
-	visual = "cube",
-	textures = {"doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png", "doors_blank.png"},
-	is_visible = true,
-	makes_footstep_sound = false,
-    automatic_rotate = false,
-})
+-- Register entity
    
 minetest.register_entity("knockout:entity", {
 	hp_max = 1000,
@@ -68,7 +57,7 @@ minetest.register_entity("knockout:entity", {
 		end
 		victim = minetest.get_player_by_name(e.grabbed_name)
 		if victim then
-			e.object:set_attach(clicker, "", {x = 0, y = 0, z = -15}, {x = 0, y = 0, z = 0})
+			e.object:set_attach(clicker, "", {x = 0, y = -10, z = -15}, {x = 0, y = 0, z = 0})
 			knockout.carrying[cName] = e.grabbed_name
 		end
     end,
@@ -132,6 +121,8 @@ knockout.knockout = function(pName, duration)
 	privs.shout = nil
 	privs.interact = nil
 	minetest.set_player_privs(pName, privs)
+	-- Look at all the pretty clouds
+	p:set_look_vertical(-math.pi / 2)
 	-- Save
 	knockout.save()
 end
