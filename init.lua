@@ -10,6 +10,9 @@ knockout.tools = {}
 -- Create mod storage
 knockout.storage = minetest.get_mod_storage()
 
+-- Created locals
+local knockout_huds = {}
+
 -- Register entity
    
 minetest.register_entity("knockout:entity", {
@@ -115,7 +118,18 @@ knockout.knockout = function(pName, duration)
 	-- Make player lay down
 	default.player_attached[pName] = true
 	default.player_set_animation(p, "lay")
-	p:set_eye_offset({x=0, y=-13, z=-2}, {x=0, y=0, z=0})
+	-- Black screen
+	if knockout_huds[pName] == nil then
+		knockout_huds[pName] = p:hud_add({
+			hud_elem_type = "image",
+			text = "knockout_black.png",
+			name = "knockedout",
+			position = {x = 0.5, y = 0.5},
+			scale = {x= -100, y= -100},
+			alignment = {x = 0, y = 0},
+		
+		})
+	end
 	-- No interacting for you, player
 	local privs = minetest.get_player_privs(pName)
 	privs.shout = nil
@@ -156,6 +170,11 @@ knockout.wake_up = function(pName)
 	-- Hide formspec
 	if p:get_hp() > 0 then
 		minetest.close_formspec(pName, "knockout:fs")
+	end
+	-- Un-black screen
+	if knockout_huds[pName] ~= nil then
+		p:hud_remove(knockout_huds[pName])
+		knockout_huds[pName] = nil
 	end
 	-- Save
 	knockout.save()
