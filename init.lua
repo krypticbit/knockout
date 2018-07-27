@@ -60,8 +60,9 @@ minetest.register_entity("knockout:entity", {
 		end
 		victim = minetest.get_player_by_name(e.grabbed_name)
 		if victim then
-			e.object:set_attach(clicker, "", {x = 0, y = -10, z = -15}, {x = 0, y = 0, z = 0})
+			victim:set_attach(clicker, "", {x = 0, y = 0, z = -15}, {x = 0, y = 0, z = 0})
 			knockout.carrying[cName] = e.grabbed_name
+			e.object:remove()
 		end
     end,
     on_step = function(e, dtime)
@@ -90,8 +91,7 @@ knockout.carrier_drop = function(pName) -- pname = name of carrier
 		local cName = knockout.carrying[pName]
 		local carried = minetest.get_player_by_name(cName)
 		if carried then
-			local e = carried:get_attach()
-			e:remove()
+			carried:set_detach()
 			knockout.knockout(cName)
 		end
 		knockout.carrying[pName] = nil
