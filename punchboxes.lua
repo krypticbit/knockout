@@ -12,7 +12,7 @@ local knock_out_players = function(pos, stasis_pos)
             knockout.knockout(victim:get_player_name(), 15)
             if stasis_pos then
                 minetest.item_place(
-                    '',
+                    ItemStack(''),
                     victim,
                     {
                         type  = 'node',
