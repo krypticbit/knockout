@@ -3,13 +3,21 @@
 local base_tile = 'default_chest_top.png^[colorize:#f008'
 local punchbox_tile = base_tile .. '^punchbox.png'
 
-local knock_out_players = function(pos, stasis_pos)
+local knock_out_players = function(pos, dir, stasis_pos)
     local candidates = minetest.get_objects_inside_radius(pos, 1)
     
     for _, victim in ipairs(candidates) do
         victim:set_hp(1)
         if victim:is_player() then
+            -- Stop punch box traps
+            if dir then
+                victim:set_pos(vector.subtract(victim:get_pos(), dir))
+            end
+            
+            -- Knock the player out
             knockout.knockout(victim:get_player_name(), 15)
+            
+            -- Stasis integration
             if stasis_pos then
                 minetest.item_place(
                     ItemStack(''),
@@ -52,12 +60,12 @@ knockout.activate_punchbox = function(pos)
         stasis_pos = false
     end
     
-    stasis_pos = knock_out_players(target_pos, stasis_pos)
+    stasis_pos = knock_out_players(target_pos, dir, stasis_pos)
     knock_out_players({
         x = target_pos.x,
         y = target_pos.y - 1,
         z = target_pos.z,
-    }, stasis_pos)
+    }, dir, stasis_pos)
 end
 
 minetest.register_node('knockout:punchbox', {
