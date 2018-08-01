@@ -3,15 +3,29 @@
 local base_tile = 'default_chest_top.png^[colorize:#f008'
 local punchbox_tile = base_tile .. '^punchbox.png'
 
-local knock_out_players = function(pos)
+local knock_out_players = function(pos, stasis_pos)
     local candidates = minetest.get_objects_inside_radius(pos, 1)
     
     for _, victim in ipairs(candidates) do
         victim:set_hp(1)
         if victim:is_player() then
             knockout.knockout(victim:get_player_name(), 15)
+            if stasis_pos then
+                minetest.item_place(
+                    '',
+                    victim,
+                    {
+                        type  = 'node',
+                        above = vector.add(stasis_pos, {x=0,y=1,z=0}),
+                        under = stasis_pos,
+                    }
+                )
+                stasis_pos = false
+            end
         end
     end
+    
+    return stasis_pos
 end
 
 knockout.activate_punchbox = function(pos)
@@ -32,12 +46,18 @@ knockout.activate_punchbox = function(pos)
         end
     end, target_pos, {name = 'air'})
     
-    knock_out_players(target_pos)
+    -- Automatically put players in Mk3 Stasis Chambers.
+    local stasis_pos = vector.add(pos, dir)
+    if minetest.get_node(stasis_pos).name ~= 'stasis:chamber' then
+        stasis_pos = false
+    end
+    
+    stasis_pos = knock_out_players(target_pos, stasis_pos)
     knock_out_players({
         x = target_pos.x,
         y = target_pos.y - 1,
         z = target_pos.z,
-    })
+    }, stasis_pos)
 end
 
 minetest.register_node('knockout:punchbox', {
