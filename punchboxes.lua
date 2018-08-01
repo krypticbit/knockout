@@ -55,6 +55,12 @@ minetest.register_node('knockout:punchbox', {
     groups = {choppy = 2, oddly_breakable_by_hand = 2},
     
     on_rightclick = knockout.activate_punchbox,
+    
+    mesecons = {
+        effector = {
+            action_on = knockout.activate_punchbox,
+        },
+    },
 })
 
 minetest.register_node('knockout:punchbox_fist', {
